@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51dc06937448d4044add3f8d209b920f, type: 3}
+  m_Name: AssessmentConfig_1
+  m_EditorClassIdentifier: 
+  AssessmentId: Ass_1
+  ShowResultsScreen: 1
+  Questions:
+  - Id: 1
+    QuestionType: 1
+    QuestionText: 10+10 =20
+    PlayAudio: 0
+    AudioClip: {fileID: 8300000, guid: df96814b0b3a8e9469d7ee8b84391484, type: 3}
+    Options:
+    - Yes
+    - No
+    CorrectOptionIndices: 01000000
+    CorrectAnswerText: true = No
+    CorrectYesNoAnswer: 0
+    CorrectTrueFalseAnswer: 0
+    Points: 20
+  - Id: 2
+    QuestionType: 3
+    QuestionText: 10+20
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Options:
+    - ' 0'
+    - 10
+    - 20
+    - 30
+    CorrectOptionIndices: 03000000
+    CorrectAnswerText: 30
+    CorrectYesNoAnswer: 0
+    CorrectTrueFalseAnswer: 0
+    Points: 20
+  - Id: 3
+    QuestionType: 4
+    QuestionText: are you dumb
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Options:
+    - no
+    - yes
+    - maybe
+    - sometimes
+    CorrectOptionIndices: 010000000200000003000000
+    CorrectAnswerText: 30
+    CorrectYesNoAnswer: 0
+    CorrectTrueFalseAnswer: 0
+    Points: 20
+  - Id: 4
+    QuestionType: 2
+    QuestionText: are you dumb
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Options:
+    - no
+    - yes
+    - maybe
+    - sometimes
+    CorrectOptionIndices: 010000000200000003000000
+    CorrectAnswerText: 30
+    CorrectYesNoAnswer: 0
+    CorrectTrueFalseAnswer: 1
+    Points: 20
+  NavigationMode: 1
+  PassThresholdPercent: 60

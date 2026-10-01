@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2da4b1513d99d54bb7877e4518313b4, type: 3}
+  m_Name: TrainingFlowConfig_1
+  m_EditorClassIdentifier: 
+  Title: 1
+  ShowCompletionScreen: 0
+  CalculateScore: 1
+  ShowFinalQuizPanel: 1
+  CompletionImage: {fileID: 21300000, guid: bdc28655fe7dd3e4cafaf7110e2608f0, type: 3}
+  StartNodeId: 3
+  Nodes:
+  - Id: 1
+    NodeType: 0
+    NextNodeId: 2
+    PlayAudio: 1
+    AudioClip: {fileID: 8300000, guid: dc3d11ca6c0ad0449b1e3d3edac80451, type: 3}
+    Trigger: 0
+    Navigation: 1
+    AutoAdvanceDelaySeconds: 4
+    TextContent: hi Bot
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 0}
+  - Id: 2
+    NodeType: 1
+    NextNodeId: 3
+    PlayAudio: 1
+    AudioClip: {fileID: 8300000, guid: df96814b0b3a8e9469d7ee8b84391484, type: 3}
+    Trigger: 0
+    Navigation: 2
+    AutoAdvanceDelaySeconds: 4
+    TextContent: hi Bot
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 0}
+  - Id: 3
+    NodeType: 2
+    NextNodeId: 4
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Trigger: 0
+    Navigation: 1
+    AutoAdvanceDelaySeconds: 4
+    TextContent: hi Bot
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 11400000, guid: 633da5d530a652f4a9aae7a55c2de4c6, type: 2}
+  - Id: 4
+    NodeType: 3
+    NextNodeId: 
+    PlayAudio: 1
+    AudioClip: {fileID: 8300000, guid: eb61ced1f66dffa4598a8a46b2f92d1a, type: 3}
+    Trigger: 4
+    Navigation: 1
+    AutoAdvanceDelaySeconds: 4
+    TextContent: hi Bot
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 0}
