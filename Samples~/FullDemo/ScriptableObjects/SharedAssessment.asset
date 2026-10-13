@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e1877d80cff2f7429a108999a250410, type: 3}
+  m_Name: SharedAssessment
+  m_EditorClassIdentifier: TrainingFramework.Runtime::Training.Assessment.Data.AssessmentConfig
+  AssessmentId: SharedAssessment
+  ShowResultsScreen: 1
+  Questions:
+  - Id: Q1
+    QuestionType: 1
+    QuestionText: Is PPE required in the work area?
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Options: []
+    CorrectOptionIndices: 
+    CorrectAnswerText: 
+    CorrectYesNoAnswer: 1
+    CorrectTrueFalseAnswer: 0
+    Points: 1
+  - Id: Q2
+    QuestionType: 3
+    QuestionText: Which item is required?
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Options:
+    - Sandals
+    - Safety glasses
+    - Scarf
+    CorrectOptionIndices: 01000000
+    CorrectAnswerText: 
+    CorrectYesNoAnswer: 0
+    CorrectTrueFalseAnswer: 0
+    Points: 1
+  NavigationMode: 0
+  PassThresholdPercent: 50

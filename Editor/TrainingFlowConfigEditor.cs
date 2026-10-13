@@ -1,19 +1,12 @@
 #if UNITY_EDITOR
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 using Training.Flow.Data;
 
 namespace Training.EditorTools
 {
-    // Custom Inspector for the TrainingFlowConfig ScriptableObject asset.
-    // Without this, ShowCompletionScreen / CalculateScore / ShowFinalQuizPanel /
-    // CompletionImage all just fall through to the default Inspector and
-    // show unconditionally - including CalculateScore/ShowFinalQuizPanel/
-    // CompletionImage when ShowCompletionScreen is off, where they mean
-    // nothing at all. This hides what doesn't currently apply, same pattern
-    // as AssessmentConfigEditor.
     [CustomEditor(typeof(TrainingFlowConfig))]
-    public class TrainingFlowConfigEditor : Editor
+    public class TrainingFlowConfigEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -27,6 +20,7 @@ namespace Training.EditorTools
             var startNodeIdProp = serializedObject.FindProperty("StartNodeId");
             var nodesProp = serializedObject.FindProperty("Nodes");
 
+            EditorGUILayout.LabelField("Training", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(titleProp);
 
             EditorGUILayout.Space();
@@ -39,19 +33,11 @@ namespace Training.EditorTools
 
                 EditorGUILayout.PropertyField(showFinalQuizProp, new GUIContent("Show Final Quiz Panel"));
 
-                // CalculateScore is meaningless once ShowFinalQuizPanel is on
-                // (that layout never shows score text regardless) - shown
-                // greyed out rather than hidden, so it's clear it still HAS
-                // a value, just isn't being used right now.
                 using (new EditorGUI.DisabledScope(showFinalQuizProp.boolValue))
                 {
                     EditorGUILayout.PropertyField(calculateScoreProp, new GUIContent("Calculate Score"));
                 }
 
-                // Completion Image is exclusive to the Final Quiz Panel
-                // layout - only shown (and therefore only settable) once
-                // that's turned on, same reasoning as hiding it entirely
-                // when ShowCompletionScreen itself is off.
                 if (showFinalQuizProp.boolValue)
                 {
                     EditorGUI.indentLevel++;
@@ -87,6 +73,26 @@ namespace Training.EditorTools
             EditorGUILayout.LabelField("Flow", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(startNodeIdProp);
             EditorGUILayout.PropertyField(nodesProp, true);
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Tools", EditorStyles.boldLabel);
+
+            if (GUILayout.Button("Validate Flow", GUILayout.Height(28)))
+            {
+                var config = (TrainingFlowConfig)target;
+                if (config.Validate(out var error))
+                {
+                    var nodeCount = config.Nodes != null ? config.Nodes.Count : 0;
+                    EditorUtility.DisplayDialog(
+                        "Validation",
+                        $"Flow is valid.\n\n{nodeCount} nodes\nStart: {config.StartNodeId}",
+                        "OK");
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Validation Failed", error, "OK");
+                }
+            }
 
             serializedObject.ApplyModifiedProperties();
         }

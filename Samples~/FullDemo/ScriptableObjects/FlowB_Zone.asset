@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846e60df9eb9a544caa0744967b2154f, type: 3}
+  m_Name: FlowB_Zone
+  m_EditorClassIdentifier: TrainingFramework.Runtime::Training.Flow.Data.TrainingFlowConfig
+  Title: Zone Walk-Through Training
+  ShowCompletionScreen: 1
+  CalculateScore: 1
+  ShowFinalQuizPanel: 0
+  CompletionImage: {fileID: 0}
+  StartNodeId: B01
+  Nodes:
+  - Id: B01
+    NodeType: 0
+    NextNodeId: B02
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Trigger: 0
+    Navigation: 0
+    AutoAdvanceDelaySeconds: 2.5
+    TextContent: 'Zone Training
+
+
+      Walk into the orange ZONE to continue.'
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 0}
+  - Id: B02
+    NodeType: 3
+    NextNodeId: B03
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Trigger: 2
+    Navigation: 0
+    AutoAdvanceDelaySeconds: 4
+    TextContent: 'WAITING: Enter the Continue zone (orange cube).'
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 0}
+  - Id: B03
+    NodeType: 0
+    NextNodeId: B04
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Trigger: 0
+    Navigation: 1
+    AutoAdvanceDelaySeconds: 4
+    TextContent: Zone cleared. Press Next for the quiz.
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 0}
+  - Id: B04
+    NodeType: 2
+    NextNodeId: B05
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Trigger: 0
+    Navigation: 0
+    AutoAdvanceDelaySeconds: 4
+    TextContent: 
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 11400000, guid: da320964db7400c48a0b60484e53068d, type: 2}
+  - Id: B05
+    NodeType: 0
+    NextNodeId: 
+    PlayAudio: 0
+    AudioClip: {fileID: 0}
+    Trigger: 0
+    Navigation: 0
+    AutoAdvanceDelaySeconds: 2
+    TextContent: Zone path finished.
+    Image: {fileID: 0}
+    AssessmentReference: {fileID: 0}

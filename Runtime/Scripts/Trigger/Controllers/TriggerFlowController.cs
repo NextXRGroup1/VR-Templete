@@ -1,28 +1,20 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Training.Core;
 
 namespace Training.Trigger.Controllers
 {
-    // Waits for configured enum triggers and resolves the matching flow step.
-    // Knows nothing about UI.
-    //
-    // CHANGES vs the old version:
-    //  - Remembers a trigger that arrived slightly BEFORE the flow started
-    //    waiting for it (_pendingTrigger). Previously an early RaiseTrigger
-    //    was thrown away and the flow waited forever.
-    //  - OnWaitStarted / verbose logging so you can see what it is waiting on.
-    //  - DebugRaise() + a debug key so you can test a Trigger node without
-    //    having wired up any VR interaction yet.
     public class TriggerFlowController : MonoBehaviour
     {
-        [Tooltip("Log waits and raised triggers to the Console.")]
         [SerializeField] private bool _verboseLogging = true;
 
         [Header("Editor testing")]
-        [Tooltip("In the Editor, press this key to fire the trigger the flow is currently waiting for.")]
         [SerializeField] private bool _enableDebugKey = true;
-        [SerializeField] private KeyCode _debugKey = KeyCode.T;
+        [SerializeField] private Key _debugKey = Key.T;
+
+        /// <summary>No hard reference needed: TriggerFlowController.Raise(...)</summary>
+        public static event Action<TrainingTrigger> OnGlobalTriggerRaised;
 
         public event Action<TrainingTrigger> OnTriggerReceived;
         public event Action<TrainingTrigger> OnWaitStarted;
@@ -34,6 +26,32 @@ namespace Training.Trigger.Controllers
         public TrainingTrigger ExpectedTrigger => _expectedTrigger;
         public bool IsWaiting => _expectedTrigger != TrainingTrigger.None;
 
+        private void OnEnable()
+        {
+            OnGlobalTriggerRaised += RaiseTrigger;
+        }
+
+        private void OnDisable()
+        {
+            OnGlobalTriggerRaised -= RaiseTrigger;
+        }
+
+        public static void Raise(TrainingTrigger trigger)
+        {
+            if (trigger == TrainingTrigger.None) return;
+            OnGlobalTriggerRaised?.Invoke(trigger);
+        }
+
+        public static void RaiseByName(string triggerName)
+        {
+            if (Enum.TryParse(triggerName, true, out TrainingTrigger parsed))
+                Raise(parsed);
+            else
+                Debug.LogError(
+                    $"TriggerFlowController: '{triggerName}' is not a valid TrainingTrigger. " +
+                    "Use enum names only (TaskCompleted, Continue, ConditionMet, …) — not the flow Title.");
+        }
+
         public void WaitForTrigger(TrainingTrigger expectedTrigger, Action onMatched)
         {
             _expectedTrigger = expectedTrigger;
@@ -42,7 +60,6 @@ namespace Training.Trigger.Controllers
             Log($"Waiting for TrainingTrigger.{expectedTrigger}");
             OnWaitStarted?.Invoke(expectedTrigger);
 
-            // If it already arrived a frame or two early, consume it now.
             if (_pendingTrigger == expectedTrigger)
             {
                 Log($"TrainingTrigger.{expectedTrigger} had already been raised — resolving immediately.");
@@ -57,9 +74,6 @@ namespace Training.Trigger.Controllers
             _onMatched = null;
         }
 
-        // Call this from ANY script: a grab event, a collider, a task check,
-        // a UI button, an XR interactable, an animation event, etc.
-        //   triggerFlowController.RaiseTrigger(TrainingTrigger.TaskCompleted);
         public void RaiseTrigger(TrainingTrigger trigger)
         {
             if (trigger == TrainingTrigger.None) return;
@@ -68,26 +82,13 @@ namespace Training.Trigger.Controllers
             OnTriggerReceived?.Invoke(trigger);
 
             if (_expectedTrigger != TrainingTrigger.None && trigger == _expectedTrigger)
-            {
                 Resolve();
-            }
             else
-            {
-                // Buffer it in case the flow starts waiting for it this frame.
                 _pendingTrigger = trigger;
-            }
         }
 
-        // Inspector/UnityEvent-friendly overload (UnityEvents can't pass enums).
-        public void RaiseTriggerByName(string triggerName)
-        {
-            if (Enum.TryParse(triggerName, true, out TrainingTrigger parsed))
-                RaiseTrigger(parsed);
-            else
-                Debug.LogError($"TriggerFlowController: '{triggerName}' is not a valid TrainingTrigger.");
-        }
+        public void RaiseTriggerByName(string triggerName) => RaiseByName(triggerName);
 
-        // Fires whatever the flow is currently waiting on. For testing only.
         public void DebugRaiseExpected()
         {
             if (_expectedTrigger == TrainingTrigger.None)
@@ -108,9 +109,9 @@ namespace Training.Trigger.Controllers
 
         private void Update()
         {
-            if (!_enableDebugKey) return;
-            if (!Application.isEditor) return;
-            if (Input.GetKeyDown(_debugKey)) DebugRaiseExpected();
+            if (!_enableDebugKey || !Application.isEditor) return;
+            if (Keyboard.current != null && Keyboard.current[_debugKey].wasPressedThisFrame)
+                DebugRaiseExpected();
         }
 
         private void Log(string message)

@@ -21,7 +21,7 @@ namespace Training.EditorTools
     // removed, and PropertyField on a null property crashes the whole
     // Inspector, not just that one field.
     [CustomEditor(typeof(AssessmentConfig))]
-    public class AssessmentConfigEditor : Editor
+    public class AssessmentConfigEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

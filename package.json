@@ -1,13 +1,21 @@
 {
-  "name": "com.vrtrainingsystem.core",
+  "name": "com.training.framework",
   "version": "1.0.0",
-  "displayName": "VRTraining System",
-  "description": "Flow-driven training system: text/image steps, wait-for-trigger nodes, assessments with five question types, per-question and per-assessment audio, optional results screens, and section+overall scoring.",
-  "unity": "2021.3",
+  "displayName": "Training Framework",
+  "description": "Combined VR training flow (text, triggers, assessments, scoring) + guided sequence activities (Select/Equip/custom) with bridge integration.",
+  "unity": "6000.0",
   "dependencies": {
     "com.unity.textmeshpro": "3.0.6",
-    "com.unity.ugui": "1.0.0"
+    "com.unity.ugui": "1.0.0",
+    "com.unity.inputsystem": "1.7.0"
   },
-  "keywords": ["training", "assessment", "quiz", "flow", "xr"],
-  "author": { "name": "VK" }
+  "keywords": ["training", "vr", "assessment", "sequence", "flow", "ppe"],
+  "author": { "name": "VK" },
+  "samples": [
+    {
+      "displayName": "Full Combined Demo",
+      "description": "Use menu Training → Setup Full Combined Demo for a fully wired scene. Optional sample assets live here.",
+      "path": "Samples~/FullDemo"
+    }
+  ]
 }
