@@ -23,7 +23,7 @@ namespace Training.Flow.Components
         [Tooltip("Optional: state to wait on. If empty, waits on current state after trigger.")]
         public string StateName;
 
-        public AnimationPlayMode PlayMode = AnimationPlayMode.Once;
+        public TrainingAnimationPlayMode PlayMode = AnimationPlayMode.Once;
 
         [Range(1, 100)]
         [Tooltip("Used by OnceStopAtPercent (and optional early end for Once).")]

@@ -54,7 +54,7 @@ namespace Training.Core
         FreeNavigation
     }
     
-    public enum AnimationPlayMode
+    public enum TrainingAnimationPlayMode
     {
         Once,           // play once, then next node
         Loop,           // loop until StopAtPercent duration or timeout
