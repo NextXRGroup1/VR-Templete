@@ -52,4 +52,11 @@ namespace Training.Core
         Sequential,
         FreeNavigation
     }
+    
+    public enum AnimationPlayMode
+    {
+        Once,           // play once, then next node
+        Loop,           // loop until StopAtPercent duration or timeout
+        OnceStopAtPercent  // stop when normalized time reaches percent
+    }
 }
