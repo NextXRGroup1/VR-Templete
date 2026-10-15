@@ -55,6 +55,8 @@ namespace Training.Flow.Controllers
         // "what is the flow doing right now?" instead of piecing it
         // together from OnShowContentNode / OnWaitingForTrigger / etc.
         public event Action<FlowState> OnStateChanged;
+        
+        public event Action<FlowNodeData> OnActiveNode;
 
         private TrainingFlowConfig _config;
         private FlowNodeData _currentNode;
@@ -184,6 +186,10 @@ namespace Training.Flow.Controllers
                 case FlowNodeType.Assessment:
                     ExecuteAssessmentNode(node);
                     break;
+                
+                case FlowNodeType.Active:
+                    ExecuteActiveNode(node);
+                    break;
             }
         }
 
@@ -263,6 +269,17 @@ namespace Training.Flow.Controllers
             _assessmentController.StartAssessment(node.AssessmentReference, result => OnAssessmentCompleted(result, node));
         }
 
+        private void ExecuteActiveNode(FlowNodeData node)
+        {
+            Log($"Active node '{node.Id}' — applying enable/disable bindings.");
+            OnActiveNode?.Invoke(node);
+
+            if (node.AutoAdvanceDelaySeconds <= 0f)
+                MoveToNode(node.NextNodeId);
+            else
+                BeginAutoAdvance(node);
+        }
+        
         private void OnAssessmentCompleted(AssessmentSectionResultData result, FlowNodeData node)
         {
             Log($"Assessment '{result.AssessmentId}' finished: {result.CorrectAnswers}/{result.TotalQuestions} correct, score {result.Score:0.#}%, passed={result.Passed}. Next node = '{node.NextNodeId}'.");
