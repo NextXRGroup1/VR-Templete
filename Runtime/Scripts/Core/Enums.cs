@@ -16,7 +16,8 @@ namespace Training.Core
         TextImage,
         Assessment,
         Trigger,
-        Active
+        Active,
+        Animation
     }
 
     public enum QuestionType
