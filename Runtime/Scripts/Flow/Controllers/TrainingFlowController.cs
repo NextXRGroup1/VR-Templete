@@ -57,7 +57,7 @@ namespace Training.Flow.Controllers
         public event Action<FlowState> OnStateChanged;
         
         /// <summary>
-        /// Animation node: controller plays anim; calls onComplete when done (or immediately if fire-and-continue).
+        /// Animation node: (node, onComplete). Call onComplete when anim should release the flow.
         /// </summary>
         public event Action<FlowNodeData, Action> OnAnimationNode;
         
@@ -263,6 +263,7 @@ namespace Training.Flow.Controllers
         private void ExecuteAnimationNode(FlowNodeData node)
         {
             Log($"Animation node '{node.Id}'.");
+
             bool advanced = false;
 
             void Done()
@@ -273,10 +274,13 @@ namespace Training.Flow.Controllers
             }
 
             if (OnAnimationNode != null)
+            {
                 OnAnimationNode.Invoke(node, Done);
+            }
             else
             {
-                Debug.LogWarning("No AnimationNodeController subscribed — skipping.");
+                Debug.LogWarning(
+                    $"TrainingFlowController: Animation node '{node.Id}' but no AnimationNodeController is subscribed.");
                 Done();
             }
         }

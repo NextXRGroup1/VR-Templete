@@ -54,10 +54,13 @@ namespace Training.Core
         FreeNavigation
     }
     
+    /// <summary>
+    /// Training flow animation mode (NOT UnityEngine.AnimationPlayMode).
+    /// </summary>
     public enum TrainingAnimationPlayMode
     {
-        Once,           // play once, then next node
-        Loop,           // loop until StopAtPercent duration or timeout
-        OnceStopAtPercent  // stop when normalized time reaches percent
+        Once = 0,
+        Loop = 1,
+        OnceStopAtPercent = 2
     }
 }

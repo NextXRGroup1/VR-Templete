@@ -20,23 +20,23 @@ namespace Training.Flow.Components
         [Tooltip("Animator Trigger parameter name.")]
         public string TriggerKey;
 
-        [Tooltip("Optional: state to wait on. If empty, waits on current state after trigger.")]
+        [Tooltip("Optional state to wait on. If empty, uses current state after trigger.")]
         public string StateName;
 
-        public TrainingAnimationPlayMode PlayMode = AnimationPlayMode.Once;
+        public TrainingAnimationPlayMode PlayMode = TrainingAnimationPlayMode.Once;
 
         [Range(1, 100)]
-        [Tooltip("Used by OnceStopAtPercent (and optional early end for Once).")]
+        [Tooltip("For OnceStopAtPercent (and early end). 100 = full clip.")]
         public int StopAtPercent = 100;
 
         [Tooltip("Animator layer index.")]
         public int Layer = 0;
 
         [Min(0f)]
-        [Tooltip("Failsafe seconds. 0 = no timeout.")]
+        [Tooltip("Safety timeout in seconds. 0 = no timeout.")]
         public float TimeoutSeconds = 30f;
 
-        [Tooltip("If true, flow advances without waiting for the animation.")]
+        [Tooltip("If true, flow advances immediately without waiting for the animation.")]
         public bool FireAndContinue = false;
     }
 
@@ -71,7 +71,7 @@ namespace Training.Flow.Components
             var binding = FindBinding(node.Id);
             if (binding == null)
             {
-                Debug.LogWarning($"[AnimationNode] No binding for '{node.Id}'.");
+                Debug.LogWarning($"[AnimationNode] No binding for node '{node.Id}'.");
                 onComplete?.Invoke();
                 return;
             }
@@ -83,20 +83,22 @@ namespace Training.Flow.Components
         private AnimationNodeBinding FindBinding(string nodeId)
         {
             if (bindings == null) return null;
+
             for (int i = 0; i < bindings.Count; i++)
             {
                 if (bindings[i] != null && bindings[i].NodeId == nodeId)
                     return bindings[i];
             }
+
             return null;
         }
 
         private IEnumerator PlayRoutine(AnimationNodeBinding b, Action onComplete)
         {
-            var animator = b.Target != null ? b.Target.GetComponent<Animator>() : null;
+            Animator animator = b.Target != null ? b.Target.GetComponent<Animator>() : null;
             if (animator == null)
             {
-                Debug.LogError($"[AnimationNode] No Animator on binding '{b.NodeId}'.");
+                Debug.LogError($"[AnimationNode] No Animator on target for node '{b.NodeId}'.");
                 onComplete?.Invoke();
                 yield break;
             }
@@ -107,26 +109,27 @@ namespace Training.Flow.Components
             if (b.FireAndContinue)
             {
                 onComplete?.Invoke();
-                // still play; flow already moved
-                if (b.PlayMode != AnimationPlayMode.Loop)
+
+                if (b.PlayMode != TrainingAnimationPlayMode.Loop)
                     yield return WaitForEnd(animator, b);
+
+                _running = null;
                 yield break;
             }
 
             yield return WaitForEnd(animator, b);
             onComplete?.Invoke();
+            _running = null;
         }
 
         private IEnumerator WaitForEnd(Animator animator, AnimationNodeBinding b)
         {
-            // Let the trigger take effect
             yield return null;
 
             float timeout = b.TimeoutSeconds > 0f ? b.TimeoutSeconds : float.MaxValue;
             float elapsed = 0f;
             float targetNorm = Mathf.Clamp01(b.StopAtPercent / 100f);
 
-            // Wait until we are in the target state (if named)
             if (!string.IsNullOrEmpty(b.StateName))
             {
                 while (elapsed < timeout)
@@ -134,14 +137,14 @@ namespace Training.Flow.Components
                     var info = animator.GetCurrentAnimatorStateInfo(b.Layer);
                     if (info.IsName(b.StateName))
                         break;
+
                     elapsed += Time.deltaTime;
                     yield return null;
                 }
             }
 
-            if (b.PlayMode == AnimationPlayMode.Loop)
+            if (b.PlayMode == TrainingAnimationPlayMode.Loop)
             {
-                // Loop until timeout only (training: prefer Once or StopAtPercent)
                 while (elapsed < timeout)
                 {
                     elapsed += Time.deltaTime;
@@ -150,7 +153,6 @@ namespace Training.Flow.Components
                 yield break;
             }
 
-            // Once / OnceStopAtPercent: wait normalized time
             while (elapsed < timeout)
             {
                 var info = animator.GetCurrentAnimatorStateInfo(b.Layer);
@@ -162,12 +164,11 @@ namespace Training.Flow.Components
                     continue;
                 }
 
-                // normalizedTime can be > 1 when looping; for Once use modulo logic carefully
                 float norm = info.normalizedTime;
-                if (b.PlayMode == AnimationPlayMode.Once ||
-                    b.PlayMode == AnimationPlayMode.OnceStopAtPercent)
+
+                if (b.PlayMode == TrainingAnimationPlayMode.Once ||
+                    b.PlayMode == TrainingAnimationPlayMode.OnceStopAtPercent)
                 {
-                    // First cycle only
                     if (norm >= targetNorm)
                         yield break;
                 }
@@ -176,16 +177,14 @@ namespace Training.Flow.Components
                 yield return null;
             }
 
-            Debug.LogWarning($"[AnimationNode] Timeout on '{b.NodeId}'.");
+            Debug.LogWarning($"[AnimationNode] Timeout on node '{b.NodeId}'.");
         }
 
         private void StopRunning()
         {
-            if (_running != null)
-            {
-                StopCoroutine(_running);
-                _running = null;
-            }
+            if (_running == null) return;
+            StopCoroutine(_running);
+            _running = null;
         }
     }
 }
