@@ -4,8 +4,6 @@ using Training.UI.Panels;
 
 namespace Training.UI.Components
 {
-    // Creates/selects the appropriate UI panel (Section 24). Reused for
-    // panel creation instead of duplicating instantiate logic elsewhere.
     public class UIPanelFactory : MonoBehaviour
     {
         [SerializeField] private TextPanel _textPanelPrefab;
@@ -15,11 +13,17 @@ namespace Training.UI.Components
         [Tooltip("Optional. Only required if any AssessmentConfig has Show Results Screen enabled.")]
         [SerializeField] private AssessmentResultPanel _assessmentResultPanelPrefab;
 
-        [Tooltip("Required for multi-session/kiosk use — shown when the whole training session finishes, with the Restart control.")]
+        [Tooltip("Required for multi-session/kiosk use.")]
         [SerializeField] private TrainingCompletePanel _trainingCompletePanelPrefab;
 
-        [Tooltip("Required only if you have more than one TrainingFlowConfig for a trainee to choose between.")]
+        [Tooltip("Required only if you have more than one TrainingFlowConfig.")]
         [SerializeField] private TrainingMenuPanel _trainingMenuPanelPrefab;
+
+        [Tooltip("Optional. Checklist status panel.")]
+        [SerializeField] private ChecklistPanel _checklistPanelPrefab;
+
+        [Tooltip("Optional. Progress / fill panel.")]
+        [SerializeField] private ProgressPanel _progressPanelPrefab;
 
         [SerializeField] private Transform _panelParent;
 
@@ -31,7 +35,7 @@ namespace Training.UI.Components
         {
             if (_assessmentResultPanelPrefab == null)
             {
-                Debug.LogError("UIPanelFactory: an assessment wants to show its results screen, but no AssessmentResultPanel prefab is assigned.");
+                Debug.LogError("UIPanelFactory: AssessmentResultPanel prefab not assigned.");
                 return null;
             }
             return Instantiate(_assessmentResultPanelPrefab, _panelParent);
@@ -41,7 +45,7 @@ namespace Training.UI.Components
         {
             if (_trainingCompletePanelPrefab == null)
             {
-                Debug.LogError("UIPanelFactory: the session finished, but no TrainingCompletePanel prefab is assigned — nothing will be shown and Restart won't be reachable.");
+                Debug.LogError("UIPanelFactory: TrainingCompletePanel prefab not assigned.");
                 return null;
             }
             return Instantiate(_trainingCompletePanelPrefab, _panelParent);
@@ -51,10 +55,30 @@ namespace Training.UI.Components
         {
             if (_trainingMenuPanelPrefab == null)
             {
-                Debug.LogError("UIPanelFactory: a training-selection menu was requested, but no TrainingMenuPanel prefab is assigned.");
+                Debug.LogError("UIPanelFactory: TrainingMenuPanel prefab not assigned.");
                 return null;
             }
             return Instantiate(_trainingMenuPanelPrefab, _panelParent);
+        }
+
+        public ChecklistPanel GetChecklistPanel()
+        {
+            if (_checklistPanelPrefab == null)
+            {
+                Debug.LogError("UIPanelFactory: ChecklistPanel prefab not assigned.");
+                return null;
+            }
+            return Instantiate(_checklistPanelPrefab, _panelParent);
+        }
+
+        public ProgressPanel GetProgressPanel()
+        {
+            if (_progressPanelPrefab == null)
+            {
+                Debug.LogError("UIPanelFactory: ProgressPanel prefab not assigned.");
+                return null;
+            }
+            return Instantiate(_progressPanelPrefab, _panelParent);
         }
 
         public IUIPanel GetPanelForNode(FlowNodeType nodeType)

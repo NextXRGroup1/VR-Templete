@@ -1,20 +1,20 @@
 {
   "name": "com.training.framework",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "displayName": "Training Framework",
-  "description": "Combined VR training flow (text, triggers, assessments, scoring) + guided sequence activities (Select/Equip/custom) with bridge integration.",
+  "description": "XR-agnostic training flow (text, triggers, active, animation, assessments) + guided sequence, checklist, progress, zones. v0.0.2 full-module sample.",
   "unity": "6000.0",
   "dependencies": {
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.ugui": "1.0.0",
     "com.unity.inputsystem": "1.7.0"
   },
-  "keywords": ["training", "vr", "assessment", "sequence", "flow", "ppe"],
-  "author": { "name": "VK" },
+  "keywords": ["training", "vr", "ar", "assessment", "sequence", "flow", "checklist", "progress"],
+  "author": { "name": "NextXR" },
   "samples": [
     {
-      "displayName": "Full Combined Demo",
-      "description": "Use menu Training → Setup Full Combined Demo for a fully wired scene. Optional sample assets live here.",
+      "displayName": "Full Demo",
+      "description": "Use Training → Setup Full Module Demo (v0.0.2) for a scene that exercises every module.",
       "path": "Samples~/FullDemo"
     }
   ]
